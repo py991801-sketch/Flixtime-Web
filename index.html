@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FlixTime - Fresh Start</title>
+    <title>FlixTime - Premium Servers</title>
     <style>
         :root {
             --bg-color: #0A1128;
@@ -20,10 +20,14 @@
         .row { display: flex; overflow-x: auto; gap: 12px; padding-right: 15px; padding-bottom: 10px; scrollbar-width: none; }
         .row::-webkit-scrollbar { display: none; }
         .poster { width: 130px; height: 195px; object-fit: cover; border-radius: 8px; cursor: pointer; flex-shrink: 0; background: #1a2238; }
+        
         #playerModal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #000; z-index: 1000; display: none; flex-direction: column; }
-        .player-header { background: #111; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
-        .player-title { color: var(--accent-color); font-weight: bold; }
-        #closeBtn { background: transparent; color: white; border: 1px solid white; padding: 5px 15px; border-radius: 4px; cursor: pointer; }
+        .player-header { background: #111; padding: 10px 15px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+        .server-btns { display: flex; gap: 5px; }
+        .btn { background: #333; color: white; border: 1px solid #555; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .btn.active { background: var(--accent-color); border-color: var(--accent-color); font-weight: bold; }
+        #closeBtn { background: transparent; color: white; border: 1px solid white; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        
         .iframe-container { flex-grow: 1; width: 100%; background: #000; }
         #playerIframe { width: 100%; height: 100%; border: none; }
         #loadingMsg { text-align: center; padding: 15px; color: var(--accent-color); display: none; }
@@ -49,7 +53,11 @@
 
     <div id="playerModal">
         <div class="player-header">
-            <div class="player-title">FlixTime Direct Player</div>
+            <div class="server-btns">
+                <button class="btn active" id="btn1" onclick="changeServer(1)">Server 1 (VIP)</button>
+                <button class="btn" id="btn2" onclick="changeServer(2)">Server 2 (Fast)</button>
+                <button class="btn" id="btn3" onclick="changeServer(3)">Server 3 (Alt)</button>
+            </div>
             <button id="closeBtn">X Close</button>
         </div>
         <div class="iframe-container">
@@ -114,15 +122,35 @@
             }, 600);
         });
 
-        // Direct Vidsrc Play Logic (No Backend Needed)
+        let currentId = '';
+        let currentType = '';
+
         function selectMovie(item) {
-            const tmdb_id = item.id;
-            const type = item.media_type === 'tv' ? 'tv' : 'movie';
+            currentId = item.id;
+            currentType = item.media_type === 'tv' ? 'tv' : 'movie';
             
-            // Seedha Vidsrc link banaya aur iframe me daal diya
-            document.getElementById('playerIframe').src = `https://vidsrc.to/embed/${type}/${tmdb_id}`;
+            changeServer(1); // Pehle Server 1 chalega
+            
             document.getElementById('playerModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
+        }
+
+        function changeServer(num) {
+            document.getElementById('btn1').classList.remove('active');
+            document.getElementById('btn2').classList.remove('active');
+            document.getElementById('btn3').classList.remove('active');
+            document.getElementById(`btn${num}`).classList.add('active');
+
+            const iframe = document.getElementById('playerIframe');
+            
+            // Naye Unblocked Premium Servers
+            if(num === 1) {
+                iframe.src = `https://embed.su/embed/${currentType}/${currentId}`; // Embed.su (Best, Unblocked)
+            } else if(num === 2) {
+                iframe.src = `https://vidlink.pro/${currentType}/${currentId}`; // Vidlink (Fast loading)
+            } else if(num === 3) {
+                iframe.src = `https://multiembed.mov/?video_id=${currentId}&tmdb=1`; // Multiembed fallback
+            }
         }
 
         document.getElementById('closeBtn').onclick = () => {
@@ -132,5 +160,5 @@
         };
     </script>
 </body>
-</html>
-  
+        </html>
+        
