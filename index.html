@@ -57,14 +57,13 @@
     <div id="playerModal">
         <div class="player-header">
             <div class="server-btns">
-                <button class="btn active" id="btn1" onclick="changeServer(1)">Server 1 (Fast)</button>
-                <button class="btn" id="btn2" onclick="changeServer(2)">Server 2 (India)</button>
-                <button class="btn" id="btn3" onclick="changeServer(3)">Server 3 (Alt)</button>
+                <button class="btn active" id="btn1" onclick="changeServer(1)">Server 1 (.to)</button>
+                <button class="btn" id="btn2" onclick="changeServer(2)">Server 2 (.me)</button>
+                <button class="btn" id="btn3" onclick="changeServer(3)">Server 3 (.net)</button>
             </div>
             <button id="closeBtn">X Close</button>
         </div>
         <div class="iframe-container">
-            <!-- Audio aur Autoplay ke liye permission add ki gayi hai -->
             <iframe id="playerIframe" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>
         </div>
     </div>
@@ -74,10 +73,8 @@
         const BASE_URL = 'https://api.themoviedb.org/3';
         const IMG_URL = 'https://image.tmdb.org/t/p/w500';
         
-        // Aaj ki date taaki unreleased movies na aayen
         const today = new Date().toISOString().split('T')[0];
 
-        // Sirf Hindi (hi) language aur released movies filter ki hain
         const categories = [
             { id: 'trendingRow', url: `/discover/movie?api_key=${API_KEY}&with_original_language=hi&primary_release_date.lte=${today}&sort_by=popularity.desc` },
             { id: 'actionRow', url: `/discover/movie?api_key=${API_KEY}&with_original_language=hi&with_genres=28&primary_release_date.lte=${today}&sort_by=popularity.desc` },
@@ -111,7 +108,6 @@
             
             document.getElementById('loadingMsg').style.display = 'block';
             debounceTimer = setTimeout(() => {
-                // Search mein bhi sirf released movies check hongi
                 fetch(`${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}&primary_release_date.lte=${today}`)
                     .then(res => res.json())
                     .then(data => {
@@ -134,13 +130,11 @@
         });
 
         let currentId = '';
-        let currentType = '';
 
         function selectMovie(item) {
             currentId = item.id;
-            currentType = 'movie';
             
-            changeServer(1); // Default ab Fast server chalega
+            changeServer(1); 
             
             document.getElementById('playerModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -154,13 +148,13 @@
 
             const iframe = document.getElementById('playerIframe');
             
-            // Server 1 ab aapka favourite vidsrc.net hai
+            // Sabse stable Vidsrc Original domains
             if(num === 1) {
-                iframe.src = `https://vidsrc.net/embed/${currentType}/${currentId}`; 
+                iframe.src = `https://vidsrc.to/embed/movie/${currentId}`; 
             } else if(num === 2) {
-                iframe.src = `https://vidsrc.in/embed/${currentType}/${currentId}`; 
+                iframe.src = `https://vidsrc.me/embed/movie/${currentId}`; 
             } else if(num === 3) {
-                iframe.src = `https://vidsrc.cc/embed/${currentType}/${currentId}`; 
+                iframe.src = `https://vidsrc.net/embed/movie/${currentId}`; 
             }
         }
 
